@@ -6,9 +6,11 @@ class FedAch < ActiveRecord::Base
   end
 
   def self.parse(str)
-    raise "Format Error: invalid length\n|#{str}|" unless str.strip.length==150
-    str="x#{str}"  # just to make fed's spec easier to read
-    create! :routing_number => str[1..9],
+    if str.strip.length!=150
+      puts "Format Error: invalid length\n|#{str}|" 
+    else
+      str="x#{str}"  # just to make fed's spec easier to read
+      puts create!( :routing_number => str[1..9],
             :office_code =>str[10],
             :servicing_frb_number => str[11..19],
             :record_type_code => str[20],
@@ -24,7 +26,7 @@ class FedAch < ActiveRecord::Base
             :phone_prefix => str[142..144],
             :phone_suffix => str[145..148],
             :status_code => str[149],
-            :data_view_code => str[150]
-
+            :data_view_code => str[150]).name
+    end
   end
 end
